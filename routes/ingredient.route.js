@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Ingredient = require('../models/Ingredient').Ingredient;
 const IngredientArchive = require('../models/Ingredient').IngredientArchive;
+const Util = require('./Util');
 
 router.get('/', async (req, res) => {
   let ingredients;
@@ -38,13 +39,16 @@ router.post('/', async (req, res) => {
   if (exists) {
     res.status(400).json({ message: 'An ingredient with this name already exists' });
   } else {
+    const currentID = await Util.getID('Ingredient');
     const newIngredient = new Ingredient({
+      displayID: currentID,
       name: req.body.name,
       serving: req.body.serving,
       itemtype: req.body.itemtype,
       stock: req.body.stock
     });
     await newIngredient.save();
+    await Util.incrementID('Ingredient');
     res.sendStatus(201);
   }
 });

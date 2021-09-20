@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const IngredientSchema = new Schema({
+  displayID: Number,
   name: String,
   serving: String,
   itemtype: String,
