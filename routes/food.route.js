@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Food = require('../models/Food').Food;
 const FoodArchive = require('../models/Food').FoodArchive;
+const Util = require('./util');
 
 router.get('/', async (req, res) => {
   let food;
@@ -32,13 +33,16 @@ router.post('/', async (req, res) => {
   if (exists) {
     res.status(400).json({ message: 'A food item with this name currently exists.' });
   } else {
+    const currentID = await Util.getID('Food');
     const newFoodItem = new Food({
+      displayID: currentID,
       name: req.body.name,
       type: req.body.type,
       ingredients: req.body.ingredients,
       price: req.body.price
     });
     await newFoodItem.save();
+    await Util.incrementID('Food');
     res.sendStatus(201);
   }
 });
