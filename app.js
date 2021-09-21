@@ -1,13 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = 5000;
+const port = process.env.PORT;
+const conn_string = process.env.CONNECTION_STRING;
 const consola = require('consola');
 const mongoose = require('mongoose');
 const dbConfig = {
   useNewUrlParser: true,
   useUnifiedTopology: true
 };
-mongoose.connect('mongodb://localhost/infiniscan', dbConfig);
+mongoose.connect(conn_string, dbConfig);
 
 app.use(express.json());
 
