@@ -4,7 +4,7 @@ const Util = require('./util');
 const Increment = require('../models/Increment');
 
 router.get('/initialize', async (req, res) => {
-  const intialized = await Increment.exists({ name: 'Admin' });
+  const initialized = await Increment.exists({ name: 'Admin' });
   if (initialized) {
     res.json({ message: 'The database IDs have already been initialized!' });
   } else {
