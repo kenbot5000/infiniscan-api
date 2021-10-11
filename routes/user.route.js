@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const User = require('../models/User').User;
+const Util = require('./util');
 
 router.get('/', async (req, res) => {
   const users = await User.find();
@@ -22,13 +23,17 @@ router.post('/', async (req, res) => {
   if (exists) {
     res.status(400).json({ message: 'A user with the email currently exists.' });
   } else {
+    const currentID = await Util.getID('User');
     const newUser = new User({
+      displayID: currentID,
       email: req.body.email,
       password: req.body.password,
       firstname: req.body.firstname,
-      lastname: req.body.lastname
+      lastname: req.body.lastname,
+      points: 0,
     });
     await newUser.save();
+    await Util.incrementID('User');
     res.sendStatus(201);
   }
 });
@@ -54,6 +59,50 @@ router.delete('/:id', async (req, res) => {
     await User.findByIdAndRemove(req.params.id);
   } else {
     res.status(404).json({ message: 'User does not exist' });
+  }
+});
+
+router.post('/auth/register', async (req, res) => {
+  const exists = await User.exists({ email: req.body.email });
+  if (exists) {
+    res.status(400).json({ message: 'A user with the email currently exists.' });
+  } else {
+    const currentID = await Util.getID('User');
+    const newUser = new User({
+      displayID: currentID,
+      email: req.body.email,
+      password: req.body.password,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      points: 0,
+    });
+    await newUser.save();
+    await Util.incrementID('User');
+    res.json({
+      res: JSON.stringify({
+        email: newUser.email,
+        id: currentID
+      })
+    }).status(201);
+  }
+});
+
+router.post('/auth/login', async (req, res) => {
+  const exists = await User.exists({ email: req.body.email });
+  if (exists) {
+    const user = await User.findOne({ email: req.body.email });
+    if (user.password === req.body.password) {
+      res.json({
+        res: JSON.stringify({
+          firstname: user.email,
+          id: user.displayID
+        })
+      });
+    } else {
+      res.status(401).json({ message: 'Incorrect password.' });
+    }
+  } else {
+    res.status(404).json({ message: 'An account with that email does not exist.' });
   }
 });
 
