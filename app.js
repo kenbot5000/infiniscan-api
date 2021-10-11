@@ -5,6 +5,7 @@ const port = process.env.PORT;
 const conn_string = process.env.CONNECTION_STRING;
 const consola = require('consola');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const dbConfig = {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -12,13 +13,9 @@ const dbConfig = {
 mongoose.connect(conn_string, dbConfig);
 
 app.use(express.json());
+app.use(cors());
 
-// CORS setup
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", process.env.APP_URL);
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-})
+app.options('*', cors())
 
 // Routes
 const userRoute = require('./routes/user.route');
