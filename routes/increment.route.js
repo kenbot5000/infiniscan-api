@@ -9,6 +9,7 @@ router.get('/initialize', async (req, res) => {
     res.json({ message: 'The database IDs have already been initialized!' });
   } else {
     await Util.initialize();
+    res.json({ res: 'The IDs have been initialized successfully.' })
   }
 })
 
