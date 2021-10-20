@@ -81,7 +81,8 @@ router.post('/auth/register', async (req, res) => {
     res.json({
       res: JSON.stringify({
         email: newUser.email,
-        id: currentID
+        displayID: currentID,
+        id: newUser._id
       })
     }).status(201);
   }
@@ -94,8 +95,9 @@ router.post('/auth/login', async (req, res) => {
     if (user.password === req.body.password) {
       res.json({
         res: JSON.stringify({
-          firstname: user.email,
-          id: user.displayID
+          email: user.email,
+          displayID: user.displayID,
+          id: user._id
         })
       });
     } else {

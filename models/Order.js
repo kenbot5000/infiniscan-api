@@ -9,7 +9,8 @@ const OrderSchema = new Schema({
   items: [FoodSchema],
   total: Number,
   promo: [PromoSchema],
-  subtotal: Number
+  subtotal: Number,
+  status: String,
 });
 
 const Order = mongoose.model('Order', OrderSchema);
