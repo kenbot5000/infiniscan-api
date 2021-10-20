@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   let orders;
   if (req.query.user && req.query.active) {
     const user = await User.findById(req.query.user);
-    orders = await Order.find({ user: user }).or({ status: 'cart' }, { status: 'inprogress' });
+    orders = await Order.find({ user: user }).or([{ status: 'cart' }, { status: 'waiting' }, { status: 'inprogress' }]);
   }
   else if (req.query.user) {
     // Query by user
@@ -64,6 +64,13 @@ router.post('/', async (req, res) => {
     res.status(201).json({ res: 'Added to cart successfully!' });
   }
 });
+
+router.put('/changestatus', async (req, res) => {
+  const order = await Order.findById(req.body.id);
+  order.status = req.body.status;
+  await order.save();
+  res.json({ res: `Order updated to ${req.body.status}!` });
+})
 
 // Remove from cart
 router.put('/', async (req, res) => {
