@@ -21,13 +21,26 @@ router.get('/', async (req, res) => {
   res.json({ res: orders });
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/search/:id', async (req, res) => {
   const exists = await Order.exists({ _id: req.params.id });
   if (exists) {
     const order = await Order.findById(req.params.id);
     res.json({ res: order });
   }
 });
+
+router.get('/list', async (req, res) => {
+  if (!req.query.status) {
+    res.status(400).json({ message: 'Needs status query parameter.' });
+  } else {
+    let orders = await Order.find({ status: req.query.status });
+    res.json({ res: orders });
+  }
+});
+
+router.get('/a', async (req, res) => {
+  res.json({ msg: 'a' })
+})
 
 // Add to cart
 router.post('/', async (req, res) => {
