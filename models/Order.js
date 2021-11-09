@@ -5,6 +5,7 @@ const FoodSchema = require('./Food').Schema;
 const PromoSchema = require('./Promo').Schema;
 
 const OrderSchema = new Schema({
+  created: Date,
   user: UserSchema,
   items: [FoodSchema],
   total: Number,

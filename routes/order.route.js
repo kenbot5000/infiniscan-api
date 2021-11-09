@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
   let orders;
   if (req.query.user && req.query.active) {
     const user = await User.findById(req.query.user);
-    orders = await Order.find({ user: user }).or([{ status: 'cart' }, { status: 'waiting' }, { status: 'inprogress' }]);
+    orders = await Order.find({ user: user }).or([{ status: 'cart' }, { status: 'waiting' }, { status: 'inprogress' }, { status: 'confirmation' }]);
   }
   else if (req.query.user) {
     // Query by user
@@ -69,6 +69,7 @@ router.post('/', async (req, res) => {
     res.json({ res: 'Added to cart successfully!' });
   } else {
     const newCart = new Order({
+      created: new Date(),
       user: user,
       items: [food],
       total: food.price,
