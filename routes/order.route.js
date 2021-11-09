@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User').User;
 const Order = require('../models/Order').Order;
 const Food = require('../models/Food').Food;
+const Ingredient = require('../models/Ingredient').Ingredient;
 
 router.get('/', async (req, res) => {
   let orders;
@@ -22,10 +23,16 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/search/:id', async (req, res) => {
-  const exists = await Order.exists({ _id: req.params.id });
-  if (exists) {
-    const order = await Order.findById(req.params.id);
-    res.json({ res: order });
+  try {
+    const exists = await Order.exists({ _id: req.params.id });
+    if (exists) {
+      const order = await Order.findById(req.params.id);
+      res.json({ res: order });
+    } else {
+      res.status(404).json({ message: 'An order does not exist under this ID.' });
+    }
+  } catch (err) {
+    res.status(404).json({ message: 'An order does not exist under this ID.' });
   }
 });
 
@@ -37,10 +44,6 @@ router.get('/list', async (req, res) => {
     res.json({ res: orders });
   }
 });
-
-router.get('/a', async (req, res) => {
-  res.json({ msg: 'a' })
-})
 
 // Add to cart
 router.post('/', async (req, res) => {
@@ -83,7 +86,22 @@ router.put('/changestatus', async (req, res) => {
   order.status = req.body.status;
   await order.save();
   res.json({ res: `Order updated to ${req.body.status}!` });
-})
+});
+
+router.put('/completeorder', async (req, res) => {
+  const order = await Order.findById(req.body.id);
+  for (const item of order.items) {
+    for (const id of item.ingredients) {
+      const ingredient = await Ingredient.findById(id);
+      console.log(ingredient);
+      ingredient.stock -= 1;
+      await ingredient.save();
+    }
+  }
+  order.status = 'completed';
+  await order.save();
+  res.json({ res: 'Order completed!' });
+});
 
 // Remove from cart
 router.put('/', async (req, res) => {
