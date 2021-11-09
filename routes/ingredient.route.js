@@ -45,7 +45,8 @@ router.post('/', async (req, res) => {
       name: req.body.name,
       serving: req.body.serving,
       itemtype: req.body.itemtype,
-      stock: req.body.stock
+      stock: req.body.stock,
+      critical: req.body.critical,
     });
     await newIngredient.save();
     await Util.incrementID('Ingredient');
@@ -62,6 +63,7 @@ router.patch('/:id', async (req, res) => {
       ingredient.serving = req.body.serving;
       ingredient.itemtype = req.body.itemtype;
       ingredient.stock = req.body.stock;
+      ingredient.critical = req.body.critical;
       await ingredient.save();
       res.json({ res: ingredient });
     } else {

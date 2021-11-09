@@ -6,7 +6,8 @@ const IngredientSchema = new Schema({
   name: String,
   serving: String,
   itemtype: String,
-  stock: Number
+  stock: Number,
+  critical: Number,
 });
 
 const Ingredient = mongoose.model('Ingredient', IngredientSchema);
