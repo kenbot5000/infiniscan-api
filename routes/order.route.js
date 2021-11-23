@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User').User;
 const Order = require('../models/Order').Order;
+const OrderArchive = require('../models/Order').OrderArchive;
 const Food = require('../models/Food').Food;
 const Ingredient = require('../models/Ingredient').Ingredient;
 
@@ -19,6 +20,11 @@ router.get('/', async (req, res) => {
     // Default
     orders = await Order.find();
   }
+  res.json({ res: orders });
+});
+
+router.get('/archive', async (req, res) => {
+  const orders = await OrderArchive.find();
   res.json({ res: orders });
 });
 
@@ -121,6 +127,14 @@ router.delete('/cancel/:id', async (req, res) => {
   order.status = 'cancelled';
   await order.save();
   res.json({ res: 'Order cancelled successfully' });
+});
+  
+router.delete('/archive/:id', async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  const toArchive = new OrderArchive(order.toJSON());
+  await toArchive.save();
+  await Order.findByIdAndRemove(req.params.id);
+  res.json({ res: 'Order archived successfully' });
 });
 
 module.exports = router;
