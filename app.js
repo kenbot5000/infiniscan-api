@@ -25,6 +25,7 @@ const archiveRoute = require('./routes/archive.route');
 const adminRoute = require('./routes/admin.route');
 const orderRoute = require('./routes/order.route');
 const idRoute = require('./routes/increment.route');
+const notificationRoute = require('./routes/notification.route');
 
 app.use('/user', userRoute);
 app.use('/ingredient', ingredientRoute);
@@ -33,6 +34,7 @@ app.use('/archive', archiveRoute);
 app.use('/admin', adminRoute);
 app.use('/order', orderRoute);
 app.use('/increment', idRoute);
+app.use('/notification', notificationRoute);
 
 app.listen(port, () => {
   consola.ready({ message: `Infiniscan is now listening at port ${port}`, badge: true });
