@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Admin = require('../models/Admin');
+const Admin = require('../models/Admin').Admin;
+const AdminArchive = require('../models/Admin').AdminArchive;
 
 router.get('/', async (req, res) => {
   const admins = await Admin.find();
@@ -26,7 +27,8 @@ router.post('/', async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       firstname: req.body.firstname,
-      lastname: req.body.lastname
+      lastname: req.body.lastname,
+      isstandard: req.body.isstandard,
     });
     await newAdmin.save();
     res.sendStatus(201);
@@ -41,6 +43,7 @@ router.patch('/:id', async (req, res) => {
     admin.password = req.body.password;
     admin.firstname = req.body.firstname;
     admin.lastname = req.body.lastname;
+    admin.isstandard = req.body.isstandard;
     await admin.save();
     res.json({ res: admin });
   } else {
@@ -51,6 +54,9 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const exists = await Admin.exists({ _id: req.params.id });
   if (exists) {
+    const admin = await Admin.findById(req.params.id);
+    const toArchive = new AdminArchive(admin.toJSON());
+    await toArchive.save();
     await Admin.deleteOne({ _id: req.params.id });
     res.sendStatus(204);
   } else {

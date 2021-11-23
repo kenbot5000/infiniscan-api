@@ -5,9 +5,11 @@ const AdminSchema = new Schema({
   email: String,
   password: String,
   firstname: String,
-  lastname: String
+  lastname: String,
+  isstandard: Boolean,
 });
 
 const Admin = mongoose.model('Admin', AdminSchema);
+const AdminArchive = mongoose.model('AdminArchive', AdminSchema);
 
-module.exports = Admin;
+module.exports = { Admin, AdminArchive };

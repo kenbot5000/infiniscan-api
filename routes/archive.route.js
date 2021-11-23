@@ -5,6 +5,7 @@ const FoodArchive = require('../models/Food').FoodArchive;
 // Models for restoration
 const Ingredient = require('../models/Ingredient').Ingredient;
 const Food = require('../models/Food').Food;
+const AdminArchive = require('../models/Admin').AdminArchive;
 
 router.get('/ingredient', async (req, res) => {
   const ingredients = await IngredientArchive.find();
@@ -51,5 +52,10 @@ router.delete('/food/:id/delete', async (req, res) => {
     res.status(404).json({ message: 'Item not found' });
   }
 });
+
+router.get('/admin', async (req, res) => {
+  const admins = await AdminArchive.find();
+  res.json({ res: admins });
+})
 
 module.exports = router;
