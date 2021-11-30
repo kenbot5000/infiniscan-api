@@ -72,7 +72,8 @@ router.post('/auth/login', async (req, res) => {
       res.json({
         res: JSON.stringify({
           firstname: admin.firstname,
-          id: admin._id
+          id: admin._id,
+          isstandard: admin.isstandard,
         })
       });
     } else {
