@@ -10,6 +10,17 @@ const dbConfig = {
   useNewUrlParser: true,
   useUnifiedTopology: true
 };
+
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+const io = new Server(server, {
+  cors: {
+    origin: process.env.APP_URL,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+  }
+});
+
 mongoose.connect(conn_string, dbConfig);
 
 app.use(express.json());
@@ -36,6 +47,15 @@ app.use('/order', orderRoute);
 app.use('/increment', idRoute);
 app.use('/notification', notificationRoute);
 
-app.listen(port, () => {
+// Socket.io
+const notificationSocket = require('./sockets/notificationSocket');
+
+const socketRegistration = (socket) => {
+  notificationSocket(io, socket);
+  consola.info('Client connected via socket.io');
+}
+io.on('connection', socketRegistration);
+
+server.listen(port, () => {
   consola.ready({ message: `Infiniscan is now listening at port ${port}`, badge: true });
 });
