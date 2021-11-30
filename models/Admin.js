@@ -12,4 +12,4 @@ const AdminSchema = new Schema({
 const Admin = mongoose.model('Admin', AdminSchema);
 const AdminArchive = mongoose.model('AdminArchive', AdminSchema);
 
-module.exports = { Admin, AdminArchive };
+module.exports = { Schema: AdminSchema, Admin, AdminArchive };

@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const UserSchema = require('./User').Schema;
 const FoodSchema = require('./Food').Schema;
 const PromoSchema = require('./Promo').Schema;
+const AdminSchema = require('./Admin').Schema;
 
 const OrderSchema = new Schema({
   created: Date,
@@ -12,6 +13,7 @@ const OrderSchema = new Schema({
   promo: [PromoSchema],
   subtotal: Number,
   status: String,
+  server: AdminSchema,
 });
 
 const Order = mongoose.model('Order', OrderSchema);

@@ -5,6 +5,7 @@ const Order = require('../models/Order').Order;
 const OrderArchive = require('../models/Order').OrderArchive;
 const Food = require('../models/Food').Food;
 const Ingredient = require('../models/Ingredient').Ingredient;
+const Admin = require('../models/Admin').Admin;
 
 router.get('/', async (req, res) => {
   let orders;
@@ -90,7 +91,13 @@ router.post('/', async (req, res) => {
 
 router.put('/changestatus', async (req, res) => {
   const order = await Order.findById(req.body.id);
+
   order.status = req.body.status;
+  if (req.body.status == 'inprogress') {
+    const server = await Admin.findById(req.body.server);
+    order.server = server;
+  }
+
   await order.save();
   res.json({ res: `Order updated to ${req.body.status}!` });
 });
