@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
       ingredients = [...ingredients.reduce((p, c) => p.set(c, true), new Map()).keys()];
     }
   } else if (req.query.search) {
-    ingredients = await Ingredient.find({ name: { $regex: req.query.search } });
+    ingredients = await Ingredient.find({ name: { $regex: req.query.search, $options: "i" } });
   } else {
     ingredients = await Ingredient.find();
   }
