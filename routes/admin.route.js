@@ -72,6 +72,8 @@ router.post('/auth/login', async (req, res) => {
       res.json({
         res: JSON.stringify({
           firstname: admin.firstname,
+          lastname: admin.lastname,
+          email: admin.email,
           id: admin._id,
           isstandard: admin.isstandard,
         })
