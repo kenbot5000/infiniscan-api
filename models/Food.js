@@ -6,7 +6,8 @@ const FoodSchema = new Schema({
   name: String,
   type: String,
   ingredients: [Schema.Types.ObjectId],
-  price: Number
+  price: Number,
+  points: Number,
 });
 
 const Food = mongoose.model('Food', FoodSchema);

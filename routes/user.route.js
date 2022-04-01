@@ -82,6 +82,24 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// router.post('/auth/generatelink', async (req, res) => {
+//   const user = await User.findOne({ email: req.body.email });
+//   if (user) {
+//     res.json({ id: user._id })
+//   }
+// })
+
+router.post('/auth/confirmemail', async (req, res) => {
+  const exists = await User.exists({ email: req.body.email });
+  if (exists) {
+    const user = await User.findOne({ email: req.body.email });
+    user.confirmed = true;
+    await user.save();
+    console.log(user)
+    res.sendStatus(200);
+  }
+})
+
 router.post('/auth/register', async (req, res) => {
   const exists = await User.exists({ email: req.body.email });
   if (exists) {
@@ -101,7 +119,8 @@ router.post('/auth/register', async (req, res) => {
         address2: req.body.address2,
         barangay: req.body.barangay,
         city: req.body.city,
-      }
+      },
+      confirmed: false,
     });
     await newUser.save();
     await Util.incrementID('User');

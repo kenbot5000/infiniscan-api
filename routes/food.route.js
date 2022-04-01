@@ -12,6 +12,13 @@ router.get('/', async (req, res) => {
       food = query.map(function (item) { return item.type; });
       food = [...food.reduce((p, c) => p.set(c, true), new Map()).keys()];
     }
+  } else if (req.query.search) {
+    const query = await Food.find({ name: { $regex: req.query.search, $options: 'i' } });
+    if (req.query.noReward) {
+      food = query.filter((item) => !item.hasOwnProperty('points'));
+    } else {
+      food = query;
+    }
   } else {
     food = await Food.find({});
   }
@@ -39,7 +46,8 @@ router.post('/', async (req, res) => {
       name: req.body.name,
       type: req.body.type,
       ingredients: req.body.ingredients,
-      price: req.body.price
+      price: req.body.price,
+      points: 0,
     });
     await newFoodItem.save();
     await Util.incrementID('Food');
@@ -55,6 +63,7 @@ router.patch('/:id', async (req, res) => {
     food.type = req.body.type;
     food.ingredients = req.body.ingredients;
     food.price = req.body.price;
+    food.points = req.body.points;
     await food.save();
     res.json({ res: food });
   } else {

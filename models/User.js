@@ -12,7 +12,8 @@ const UserSchema = new Schema({
   address: {
     type: Map,
     of: String,
-  }
+  },
+  confirmed: Boolean,
 });
 
 const User = mongoose.model('User', UserSchema);
