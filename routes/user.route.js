@@ -12,6 +12,7 @@ router.get('/:id', async (req, res) => {
   const exists = await User.exists({ _id: req.params.id });
   if (exists) {
     const user = await User.findById(req.params.id);
+    console.log(user)
     res.json({ res: user });
   } else {
     res.status(404).json({ message: 'User does not exist' });
@@ -31,6 +32,13 @@ router.post('/', async (req, res) => {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       points: 0,
+      phone: req.body.phone,
+      address: {
+        address1: req.body.address1,
+        address2: req.body.address2,
+        barangay: req.body.barangay,
+        city: req.body.city,
+      }
     });
     await newUser.save();
     await Util.incrementID('User');
@@ -41,15 +49,27 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   const exists = await User.exists({ _id: req.params.id });
   if (exists) {
-    const user = await User.findOne({ _id: req.query.id });
+    const user = await User.findOne({ _id: req.params.id });
     user.email = req.body.email;
     user.password = req.body.password;
     user.lastname = req.body.lastname;
     user.firstname = req.body.firstname;
+    user.phone = req.body.phone;
     await user.save();
     res.json({ res: user });
   } else {
     res.status(404).json({ message: 'User does not exist' });
+  }
+});
+
+router.patch('/:id/address', async (req, res) => {
+  const exists = await User.exists({ _id: req.params.id });
+  if (exists) {
+    const user = await User.findOne({ _id: req.params.id });
+    user.address.set('address1', req.body.address1);
+    user.address.set('address2', req.body.address2);
+    user.address.set('barangay', req.body.barangay);
+    user.address.set('city', req.body.city);
   }
 });
 
@@ -61,6 +81,24 @@ router.delete('/:id', async (req, res) => {
     res.status(404).json({ message: 'User does not exist' });
   }
 });
+
+// router.post('/auth/generatelink', async (req, res) => {
+//   const user = await User.findOne({ email: req.body.email });
+//   if (user) {
+//     res.json({ id: user._id })
+//   }
+// })
+
+router.post('/auth/confirmemail', async (req, res) => {
+  const exists = await User.exists({ email: req.body.email });
+  if (exists) {
+    const user = await User.findOne({ email: req.body.email });
+    user.confirmed = true;
+    await user.save();
+    console.log(user)
+    res.sendStatus(200);
+  }
+})
 
 router.post('/auth/register', async (req, res) => {
   const exists = await User.exists({ email: req.body.email });
@@ -75,6 +113,14 @@ router.post('/auth/register', async (req, res) => {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       points: 0,
+      phone: req.body.phone,
+      address: {
+        address1: req.body.address1,
+        address2: req.body.address2,
+        barangay: req.body.barangay,
+        city: req.body.city,
+      },
+      confirmed: false,
     });
     await newUser.save();
     await Util.incrementID('User');

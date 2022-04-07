@@ -83,7 +83,7 @@ router.post('/', async (req, res) => {
       promo: [],
       subtotal: food.price,
       status: 'cart'
-    }) ;
+    });
     await newCart.save();
     res.status(201).json({ res: 'Added to cart successfully!' });
   }
@@ -104,10 +104,17 @@ router.put('/changestatus', async (req, res) => {
 
 router.put('/completeorder', async (req, res) => {
   const order = await Order.findById(req.body.id);
+  const user = await User.findById(order.user._id);
   for (const item of order.items) {
-    for (const id of item.ingredients) {
+    const foodItem = await Food.findById(item._id);
+    console.log(foodItem)
+    if (foodItem.points) {
+      console.log(user)
+      user.points += foodItem.points;
+      await user.save();
+    }
+    for (const id of foodItem.ingredients) {
       const ingredient = await Ingredient.findById(id);
-      console.log(ingredient);
       ingredient.stock -= 1;
       await ingredient.save();
     }

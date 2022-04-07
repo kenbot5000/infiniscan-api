@@ -7,7 +7,13 @@ const UserSchema = new Schema({
   password: String,
   lastname: String,
   firstname: String,
-  points: Number
+  points: Number,
+  phone: String,
+  address: {
+    type: Map,
+    of: String,
+  },
+  confirmed: Boolean,
 });
 
 const User = mongoose.model('User', UserSchema);

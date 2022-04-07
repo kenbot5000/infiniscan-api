@@ -37,6 +37,7 @@ const adminRoute = require('./routes/admin.route');
 const orderRoute = require('./routes/order.route');
 const idRoute = require('./routes/increment.route');
 const notificationRoute = require('./routes/notification.route');
+const rewardRoute = require('./routes/reward.route');
 
 app.use('/user', userRoute);
 app.use('/ingredient', ingredientRoute);
@@ -46,6 +47,7 @@ app.use('/admin', adminRoute);
 app.use('/order', orderRoute);
 app.use('/increment', idRoute);
 app.use('/notification', notificationRoute);
+app.use('/rewards', rewardRoute);
 
 // Socket.io
 const notificationSocket = require('./sockets/notificationSocket');
