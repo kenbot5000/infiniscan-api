@@ -15,7 +15,9 @@ router.get('/', async (req, res) => {
   } else if (req.query.search) {
     const query = await Food.find({ name: { $regex: req.query.search, $options: 'i' } });
     if (req.query.noReward) {
-      food = query.filter((item) => !item.hasOwnProperty('points'));
+      food = query.filter((item) => {
+        return !item?.points
+      });
     } else {
       food = query;
     }
