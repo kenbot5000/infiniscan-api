@@ -54,7 +54,7 @@ router.delete('/', async (req, res) => {
 
 router.post('/claim', async (req, res) => {
   const promoItem = await Promo.findById(req.query.id);
-  const foodItem = await Food.findById(promoItem._id);
+  const foodItem = await Food.findById(promoItem.item._id);
   for (const id of foodItem.ingredients) {
     const ingredient = await Ingredient.findById(id);
     ingredient.stock -= 1;
