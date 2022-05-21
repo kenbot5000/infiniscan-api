@@ -5,6 +5,8 @@ module.exports = (io, socket) => {
     if (payload.type == 'ready') {
       console.log(payload.id);
       socket.to(payload.id).emit('readyforpickup');
+    } else if (payload.type == 'complete') {
+      socket.to(payload.id).emit('complete');
     } else if (payload.type == 'neworder') {
       console.log('New Order Event')
       socket.broadcast.emit('neworder');
